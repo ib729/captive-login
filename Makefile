@@ -2,7 +2,7 @@ TESTS=test/clogin.bats
 BIN=bin/clogin
 
 test: $(BIN) $(TESTS) 
-	./test/bats/bats test
+	./test/bats/bin/bats test
 
 install: test $(BIN)
 	sudo cp -v bin/clogin /usr/local/bin
