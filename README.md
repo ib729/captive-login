@@ -1,9 +1,4 @@
-[![CircleCI](https://img.shields.io/circleci/project/github/authq/captive-login.svg?style=flat-square)](https://circleci.com/gh/authq/captive-login)
-[![Docker Automated build](https://img.shields.io/docker/automated/authq/clogin.svg?style=flat-square)](https://hub.docker.com/r/authq/clogin)
-[![Docker Build Status](https://img.shields.io/docker/build/authq/clogin.svg?style=flat-square)](https://hub.docker.com/r/authq/clogin)
-[![Docker layers](https://images.microbadger.com/badges/image/authq/clogin.svg)](https://microbadger.com/images/authq/clogin)
-
-# clogin(1) -- captive-portal login utility
+# clogin - captive-portal login utility
 
 ### SYNOPSIS
 
@@ -125,5 +120,6 @@ Feel free forking this repository and making PRs for features and fixes :)
 ## LICENSE
 
 Copyright (C) 2018 Pooya Parsa <pooya@pi0.ir>
+Copyright (C) 2025 Ivan Belousov <hello@ivanbelousov.com>
 
-This work is released under the GNU General Public License v3.0. See [LICENSE](./LICENSE) for details.
+This project is licensed under the GPL-3.0 License. See the [LICENSE](LICENSE) file for details.

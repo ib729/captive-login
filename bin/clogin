@@ -22,9 +22,9 @@ login () {
     # Ensure username and password are set
     ensure_user_pass
 
-    local code=`_request "${BASE_URL}${LOGIN_ENDPOINT}" "username=${USERNAME}&password=${PASSWORD}"`
+    local code=$(_request "${BASE_URL}${LOGIN_ENDPOINT}" "username=${USERNAME}&password=${PASSWORD}")
     
-    if [ $code -eq "${SUCCESS_CODE}" ]; then
+    if [[ "$code" -eq "${SUCCESS_CODE}" ]]; then
         echo "Login was successful"
         return 0
     else
@@ -35,9 +35,9 @@ login () {
 
 # Logout command
 logout () {
-    local code=`_request "${BASE_URL}${LOGOUT_ENDPOINT}"`
+    local code=$(_request "${BASE_URL}${LOGOUT_ENDPOINT}")
     
-    if [ "$code" -eq "${SUCCESS_CODE}" ]; then
+    if [[ "$code" -eq "${SUCCESS_CODE}" ]]; then
         ok "Logout was successful"
     else
         err "Error while logging out"
@@ -51,12 +51,12 @@ loop () {
 
     while true ; do
         # Test connectivity
-        if $0 test > /dev/null ; then
+        if "$0" test > /dev/null ; then
             log "Connected"
         else 
             # Try to login
             log "Tring to login..."
-            if $0 login > /dev/null ; then
+            if "$0" login > /dev/null ; then
                 log "Login successful"
             else
                 log "Login failed"
@@ -70,9 +70,9 @@ loop () {
 
 # Test command
 test () {
-    local code=`_request "${TEST_URL}"`
+    local code=$(_request "${TEST_URL}")
     
-    if [ "$code" -eq "${TEST_SUCCESS_CODE}" ]; then
+    if [[ "$code" -eq "${TEST_SUCCESS_CODE}" ]]; then
         ok "test was successful"
     else
         err "Login required"
@@ -85,55 +85,55 @@ test () {
 # Returns: http status code or -1 if any error occurs
 #------------------------------------------------------
 _request () {
-    local url=$1
-    local data=$2
+    local url="$1"
+    local data="$2"
 
-    local args=''
+    local args=()
     local code
 
     case "${HTTP_CLIENT}" in
         curl)
             # Make it silent
-            args+=' -s -o /dev/null'
+            args+=("-s" "-o" "/dev/null")
 
             # Return http status code
-            args+=' -w %{http_code}'
+            args+=("-w" "%{http_code}")
 
             # Make a POST request if data provided
-            if [ ! -z "$data" ] ; then
-                args+=" -X POST -d ${data}"
+            if [[ -n "$data" ]]; then
+                args+=("-X" "POST" "-d" "$data")
             fi
 
             # Append url
-            args+=" $url"
+            args+=("$url")
 
             # Execute curl
-            code=`curl $args`
+            code=$(curl "${args[@]}")
         ;;
         wget)
             # Make it silent
-            args+=' -q -O /dev/null'
+            args+=("-q" "-O" "/dev/null")
 
             #  Print HTTP headers
-            args+=' -S'
+            args+=("-S")
 
             # Make a POST request if data provided
-            if [ ! -z "$data" ] ; then
-                args+=" --post-data=${data}"
+            if [[ -n "$data" ]]; then
+                args+=("--post-data=$data")
             fi
 
             # Append url
-            args+=" $url"
+            args+=("$url")
 
             # Execute wget
-            code=`wget $args 2>&1 | head -n1 | cut -d " " -f4`
+            code=$(wget "${args[@]}" 2>&1 | head -n1 | cut -d " " -f4)
         ;;
         *)
             die "Invalid http client: ${HTTP_CLIENT}"
         ;;
     esac
 
-    echo ${code:-"-1"}
+    echo "${code:--1}"
 }
 
 #------------------------------------------------------
@@ -202,15 +202,15 @@ die () {
 }
 
 log () {
-    local msg=$1
+    local msg="$1"
     
-    local timestamp=`date "+%Y-%m-%d %H:%M:%S"`
+    local timestamp=$(date "+%Y-%m-%d %H:%M:%S")
     local log="[$timestamp] $msg"
 
-    if [ ! -z $LOG_FILE ] ; then
-        echo $log >> $LOG_FILE
+    if [[ -n "$LOG_FILE" ]]; then
+        echo "$log" >> "$LOG_FILE"
     else
-        echo $log
+        echo "$log"
     fi
 }
 
@@ -224,11 +224,11 @@ prompt () {
 }
 
 ensure_user_pass () {
-    if [ $ALLOW_EMPTY -eq 0 ] ; then
-        if [ -z "$USERNAME" ]; then
+    if [[ "$ALLOW_EMPTY" -eq 0 ]]; then
+        if [[ -z "$USERNAME" ]]; then
             prompt "USERNAME" "Enter username"
         fi
-        if [ -z "$PASSWORD" ]; then
+        if [[ -z "$PASSWORD" ]]; then
             prompt "PASSWORD" "Enter password"
         fi
     fi
@@ -249,17 +249,26 @@ err () {
 }
 
 readconf () {
-    local file=$1
+    local file="$1"
 
-    for line in `cat $file | grep "^[A-Z]"`; do
-        key=`echo $line|cut -d '=' -f1`
-        val=`echo $line|cut -d '=' -f2`
-        if [ ! -z "$key" ] && [ ! -z "$val" ] ; then
-            if [ ! ${!key} ] ; then
-                export $key=$val
+    if [[ ! -r "$file" ]]; then
+        return
+    fi
+
+    while IFS='=' read -r key val; do
+        # Skip lines not starting with A-Z
+        [[ "$key" =~ ^[A-Z] ]] || continue
+        
+        # Trim whitespace
+        key=$(echo "$key" | xargs)
+        val=$(echo "$val" | xargs)
+
+        if [[ -n "$key" && -n "$val" ]]; then
+            if [[ -z "${!key}" ]]; then
+                export "$key=$val"
             fi
         fi
-    done
+    done < "$file"
 }
 
 #------------------------------------------------------
@@ -268,8 +277,8 @@ readconf () {
 
 # Try to apply configuarion files from standard locations before parsing options
 for file in "/usr/local/etc/clogin.conf" "/etc/clogin.conf" "~/.clogin.conf"; do
-    [ ! -r $file ] && continue
-    readconf $file
+    [[ ! -r "$file" ]] && continue
+    readconf "$file"
 done
 
 # Default options
@@ -333,8 +342,8 @@ while [ $# -gt 0 ]; do
 done
 
 # Apply config file, if provided
-if [ -r $CONFIG_FILE ]; then
-    readconf $CONFIG_FILE
+if [[ -r "$CONFIG_FILE" ]]; then
+    readconf "$CONFIG_FILE"
 fi
 
 # Chooce the best HTTP_CLIENT if set to auto
@@ -349,4 +358,4 @@ if [ "${HTTP_CLIENT}" = "auto" ] ; then
 fi
 
 # Invoke command
-$COMMAND
+"$COMMAND"
