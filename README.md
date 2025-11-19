@@ -27,7 +27,6 @@ wget https://raw.githubusercontent.com/ib729/captive-login/master/bin/clogin
 chmod +x clogin
 sudo mv clogin /usr/local/bin
 ```
-``` 
 
 **Supported options:**
 
@@ -115,7 +114,7 @@ Feel free forking this repository and making PRs for features and fixes :)
 
 ## LICENSE
 
-Copyright (C) 2018 Pooya Parsa <pooya@pi0.ir>
+Copyright (C) 2018 Pooya Parsa <pooya@pi0.ir>  
 Copyright (C) 2025 Ivan Belousov <hello@ivanbelousov.com>
 
 This project is licensed under the GPL-3.0 License. See the [LICENSE](LICENSE) file for details.
