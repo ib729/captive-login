@@ -10,9 +10,9 @@ install: test $(BIN)
 	hash -r
 
 docker-build: Dockerfile
-	docker build -t authq/clogin .
+	docker build -t ib729/clogin .
 
 docker: docker-build
-	docker run -it --rm authq/clogin test
+	docker run -it --rm ib729/clogin test
 
 .PHONY: test install docker-build docker

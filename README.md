@@ -1,7 +1,5 @@
 # clogin - captive-portal login utility
 
-[![CircleCI](https://circleci.com/gh/ib729/captive-login.svg?style=svg)](https://circleci.com/gh/ib729/captive-login)
-
 ### SYNOPSIS
 
 `Usage: clogin login|logout|loop|test [--help] [OPTION...]`
@@ -22,24 +20,14 @@ Logout:
 
 `clogin logout`
 
-## INSTALL
+### INSTALL
 
 ```bash
-wget https://raw.githubusercontent.com/authq/captive-login/master/bin/clogin
+wget https://raw.githubusercontent.com/ib729/captive-login/master/bin/clogin
 chmod +x clogin
 sudo mv clogin /usr/local/bin
 ```
-
-## DESCRIPTION
-
-At Amirkabir university, we have mikrotik powered captive-portal for internet access. This makes some challenges when a persistent internet connection is needed in headless devices and lab servers.
-
-This utility automates captive-portal login proccess. I've tried to generalize all params as possible so it can be used in similar environments, at least with other mikrotik captive-portals.
-
-Behind the scenes, login process is achived by sending a HTTPS `POST` request to `/login` endpoint of captive-portal containing `username` and `password` fields in body. Logout is done by sending a `GET` request to `/logout` endpoint.
-Both success if HTTP response code is `302` (Mikrotik spec).
-The connectivity test successes when `GET` requst to test url is `200`.
-For detailed info of how this script works, see [bin/clogin](bin/clogin). 
+``` 
 
 **Supported options:**
 
@@ -93,16 +81,18 @@ Supported environment variables:
 - `TEST_SUCCESS_CODE`
 - `LOOP_INTERVAL`
 
-## DOCKER IMAGE
+## DOCKER
 
-An alpine based [docker image](https://hub.docker.com/r/authq/clogin) (~4MB) is available for ease of use and deployment.
+You can build the docker image locally:
 
 ```bash
-docker pull authq/captive-login
+docker build -t clogin .
 ```
 
+Then run it:
+
 ```bash
-docker run -it --rm  -e USERNAME="test" -e PASSWORD="test" authq/clogin loop
+docker run -it --rm  -e USERNAME="test" -e PASSWORD="test" clogin loop
 ```
 
 ## DEVELOPMENT
