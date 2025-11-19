@@ -23,7 +23,7 @@ Logout:
 ### INSTALL
 
 ```bash
-wget https://raw.githubusercontent.com/ib729/captive-login/master/bin/clogin
+wget https://raw.githubusercontent.com/ib729/captive-login/main/bin/clogin
 chmod +x clogin
 sudo mv clogin /usr/local/bin
 ```
@@ -104,13 +104,6 @@ Available Makefile commands:
 - `make install` - Installs `clogin` utility to `/usr/local/bin`
 - `make docker-build` - Build docker image
 - `make docker` - Build and test docker image functionality
-
-Feel free forking this repository and making PRs for features and fixes :)
-
-## RELATED PROJECTS
-
-- [Reyhoon Hotspot Login](https://github.com/mamal72/reyhoon-hotspot-login) - A simple http client written in go to log us in with less pain and effort.
-- [Mili](https://github.com/SadeghHayeri/Mili) - Mili is an open source tool for auto login hotspot pages! (MacOS + Linux)
 
 ## LICENSE
 
