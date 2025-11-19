@@ -22,7 +22,7 @@ login () {
     # Ensure username and password are set
     ensure_user_pass
 
-    local code=$(_request "${BASE_URL}${LOGIN_ENDPOINT}" "username=${USERNAME}&password=${PASSWORD}")
+    local code=$(_request "${BASE_URL}${LOGIN_ENDPOINT}" "${USERNAME_FIELD}=${USERNAME}&${PASSWORD_FIELD}=${PASSWORD}")
     
     if [[ "$code" -eq "${SUCCESS_CODE}" ]]; then
         echo "Login was successful"
@@ -157,7 +157,9 @@ usage () {
         -l, --log-file <val>     Set log file (Defaults to `/dev/stderr`)
 
         -u, --username <val>    Set login username
+        --user-field <val>      Set username field name (Defaults to "username")
         -p, --password <val>    Set login password
+        --password-field <val>  Set password field name (Defaults to "password")
         --allow-empty           Allow using empty username and password
 
         -c, --client <val>      Set http client to make requests. (Possible values: auto|curl|wget)
@@ -178,7 +180,9 @@ usage () {
         - LOG_FILE
 
         - USERNAME
+        - USERNAME_FIELD
         - PASSWORD
+        - PASSWORD_FIELD
         - ALLOW_EMPTY
 
         - HTTP_CLIENT
@@ -292,7 +296,9 @@ export LOGOUT_ENDPOINT=${LOGOUT_ENDPOINT:-"/logout"}
 export SUCCESS_CODE=${SUCCESS_CODE:-302}
 
 export USERNAME=${USERNAME:-""}
+export USERNAME_FIELD=${USERNAME_FIELD:-"username"}
 export PASSWORD=${PASSWORD:-""}
+export PASSWORD_FIELD=${PASSWORD_FIELD:-"password"}
 export ALLOW_EMPTY=${ALLOW_EMPTY:-0}
 
 export TEST_URL=${TEST_URL:-"http://icanhazip.com"}
@@ -318,7 +324,9 @@ while [ $# -gt 0 ]; do
         -l|--log-file)           shift; LOG_FILE=$1; shift ;;
 
         -u|--username)          shift; USERNAME=$1; shift ;;
+        --user-field)           shift; USERNAME_FIELD=$1; shift ;;
         -p|--password)          shift; PASSWORD=$1; shift ;;
+        --password-field)       shift; PASSWORD_FIELD=$1; shift ;;
         --allow-empty)          shift; ALLOW_EMPTY=1 ;;
 
         -c|--client)            shift; HTTP_CLIENT=$1; shift ;;

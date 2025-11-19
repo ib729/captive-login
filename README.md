@@ -1,5 +1,7 @@
 # clogin - captive-portal login utility
 
+[![CircleCI](https://circleci.com/gh/ib729/captive-login.svg?style=svg)](https://circleci.com/gh/ib729/captive-login)
+
 ### SYNOPSIS
 
 `Usage: clogin login|logout|loop|test [--help] [OPTION...]`
@@ -44,7 +46,9 @@ For detailed info of how this script works, see [bin/clogin](bin/clogin).
 - `-f, --conf` - Path to config file (Defaults to `clogin.conf`)
 - `-l, --log-file <val>` - Set log file (Defaults to `/dev/stderr`)
 - `-u, --username <val>` - Set login username
+- `--user-field <val>` - Set username field name (Defaults to `username`)
 - `-p, --password <val>` - Set login password
+- `--password-field <val>` - Set password field name (Defaults to `password`)
 - `--allow-empty` - Allow using empty username and password
 - `-c, --client <val>` - Set http client to make requests. (Possible values: `auto|curl|wget`)
 - `--base <val>` - Set http client base url (Defauts to `https://login.aut.ac.ir`)
@@ -76,7 +80,9 @@ Supported environment variables:
 - `CONFIG_FILE`
 - `LOG_FILE`
 - `USERNAME`
+- `USERNAME_FIELD`
 - `PASSWORD`
+- `PASSWORD_FIELD`
 - `ALLOW_EMPTY`
 - `HTTP_CLIENT`
 - `BASE_URL`
@@ -101,7 +107,7 @@ docker run -it --rm  -e USERNAME="test" -e PASSWORD="test" authq/clogin loop
 
 ## DEVELOPMENT
 
-This project uses [BATS](https://github.com/sstephenson/bats) for automated testing, [Dockerfile](https://docs.docker.com/engine/reference/builder) for packaging and [Makefile](https://www.gnu.org/s/make/manual/make.html) for development workflow.
+This project uses [BATS](https://github.com/bats-core/bats-core) for automated testing, [Dockerfile](https://docs.docker.com/engine/reference/builder) for packaging and [Makefile](https://www.gnu.org/s/make/manual/make.html) for development workflow.
 
 Available Makefile commands:
 
